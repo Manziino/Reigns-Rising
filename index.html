@@ -8,7 +8,6 @@
 </head>
 <body>
     <div id="game-ui">
-        <!-- Barre de statistiques avec indicateurs de changement -->
         <header id="stats-container">
             <div class="stat-group" id="stat-0">
                 <div class="indicator"></div>
@@ -17,12 +16,12 @@
             </div>
             <div class="stat-group" id="stat-1">
                 <div class="indicator"></div>
-                <div class="icon">⚔️</div>
+                <div class="icon">✊</div>
                 <div class="progress-bar"><div class="fill" style="height: 50%;"></div></div>
             </div>
             <div class="stat-group" id="stat-2">
                 <div class="indicator"></div>
-                <div class="icon">✊</div>
+                <div class="icon">⚔️</div>
                 <div class="progress-bar"><div class="fill" style="height: 50%;"></div></div>
             </div>
             <div class="stat-group" id="stat-3">
@@ -32,7 +31,9 @@
             </div>
         </header>
 
-        <!-- Zone de jeu -->
+        <!-- NOUVEAU : Affichage du temps de règne -->
+        <div id="time-counter">Mois de règne : <span id="months-count">1</span></div>
+
         <main id="board">
             <h2 id="character-name">Chargement...</h2>
             
