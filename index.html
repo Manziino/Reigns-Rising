@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Red Rising : Reigns Engine</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-ui">
+        <!-- Barre de statistiques avec indicateurs de changement -->
+        <header id="stats-container">
+            <div class="stat-group" id="stat-0">
+                <div class="indicator"></div>
+                <div class="icon">🏛️</div>
+                <div class="progress-bar"><div class="fill" style="height: 50%;"></div></div>
+            </div>
+            <div class="stat-group" id="stat-1">
+                <div class="indicator"></div>
+                <div class="icon">⚔️</div>
+                <div class="progress-bar"><div class="fill" style="height: 50%;"></div></div>
+            </div>
+            <div class="stat-group" id="stat-2">
+                <div class="indicator"></div>
+                <div class="icon">✊</div>
+                <div class="progress-bar"><div class="fill" style="height: 50%;"></div></div>
+            </div>
+            <div class="stat-group" id="stat-3">
+                <div class="indicator"></div>
+                <div class="icon">💎</div>
+                <div class="progress-bar"><div class="fill" style="height: 50%;"></div></div>
+            </div>
+        </header>
+
+        <!-- Zone de jeu -->
+        <main id="board">
+            <h2 id="character-name">Chargement...</h2>
+            
+            <div id="card-stack">
+                <div id="current-card" class="card">
+                    <div class="decision-overlay left-decision" id="decision-left">Non</div>
+                    <div class="decision-overlay right-decision" id="decision-right">Oui</div>
+                    <div class="card-content">
+                        <p id="card-text">Initialisation du système...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
