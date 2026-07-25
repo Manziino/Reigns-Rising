@@ -133,4 +133,16 @@ body {
     border: 2px solid #2ecc71;
     transform: rotate(-15deg);
 }
- 
+
+/* --- NOUVEAU : Style du compteur de temps --- */
+#time-counter {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--gold-accent);
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
