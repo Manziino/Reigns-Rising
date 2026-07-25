@@ -54,47 +54,51 @@ const gameCards = [
 ];
 
 // ==========================================
-// 2. LE CERVEAU DU JEU (Le Moteur V2)
+// 2. LE CERVEAU DU JEU (Avec Compteur de Survie)
 // ==========================================
-
-// --- ÉTAT DU JEU ET MÉMOIRE ---
 let stats = [50, 50, 50, 50];
-let gameFlags = {}; // 🚩 Le dictionnaire qui mémorise les événements débloqués
+let gameFlags = {}; 
 let currentCardData = null;
+let lastCardId = null; 
+
+// ⏳ NOUVEAU : Gestion du temps et du meilleur score
+let reignMonths = 1;
+// Va chercher le record dans la mémoire du téléphone (ou met 0 par défaut)
+let bestScore = localStorage.getItem('redRisingBestScore') || 0; 
 
 const SWIPE_THRESHOLD = 120;
 const ROTATION_FACTOR = 0.08;
 
-// --- ELEMENTS HTML (DOM) ---
 const card = document.getElementById('current-card');
 const decisionLeft = document.getElementById('decision-left');
 const decisionRight = document.getElementById('decision-right');
 const indicators = document.querySelectorAll('.indicator');
 const fills = document.querySelectorAll('.fill');
+const monthsDisplay = document.getElementById('months-count'); // Élément HTML du score
 
 let isDragging = false;
 let startX = 0;
 let currentX = 0;
 
-// 🎲 NOUVELLE FONCTION : Piocher une carte au hasard selon les conditions
 function drawNextCard() {
-    // 1. On filtre les cartes qui ont le droit d'apparaître
-    const availableCards = gameCards.filter(c => {
-        if (!c.conditions) return true; // Si pas de condition, c'est ok
-        // Vérifie si TOUS les flags requis par la carte sont dans notre mémoire
+    let availableCards = gameCards.filter(c => {
+        if (!c.conditions) return true;
         return c.conditions.every(flag => gameFlags[flag] === true);
     });
 
+    if (availableCards.length > 1 && lastCardId !== null) {
+        availableCards = availableCards.filter(c => c.id !== lastCardId);
+    }
+
     if (availableCards.length === 0) {
-        document.getElementById('card-text').innerText = "Le destin de la République est scellé. Plus aucune intrigue...";
+        document.getElementById('card-text').innerText = "Le destin de la République est scellé.";
         return;
     }
 
-    // 2. On choisit une carte au hasard parmi celles disponibles
     const randomIndex = Math.floor(Math.random() * availableCards.length);
     currentCardData = availableCards[randomIndex];
+    lastCardId = currentCardData.id;
 
-    // 3. Affichage
     document.getElementById('card-text').innerText = currentCardData.text;
     document.getElementById('character-name').innerText = currentCardData.character;
     decisionLeft.innerText = currentCardData.leftChoice.text;
@@ -107,32 +111,29 @@ function drawNextCard() {
     hideIndicators();
 }
 
-// Le doigt touche l'écran
 card.addEventListener('pointerdown', (e) => {
     isDragging = true;
     startX = e.clientX;
     card.style.transition = 'none';
 });
 
-// Le doigt glisse
 window.addEventListener('pointermove', (e) => {
     if (!isDragging) return;
     currentX = e.clientX;
     const diffX = currentX - startX;
     card.style.transform = `translate(${diffX}px, 0px) rotate(${diffX * ROTATION_FACTOR}deg)`;
     
-    if (diffX > 0) { // Droite
+    if (diffX > 0) { 
         decisionRight.style.opacity = diffX / SWIPE_THRESHOLD;
         decisionLeft.style.opacity = 0;
         showImpacts(currentCardData.rightChoice.impacts);
-    } else { // Gauche
+    } else { 
         decisionLeft.style.opacity = Math.abs(diffX) / SWIPE_THRESHOLD;
         decisionRight.style.opacity = 0;
         showImpacts(currentCardData.leftChoice.impacts);
     }
 });
 
-// Le doigt lâche l'écran
 window.addEventListener('pointerup', (e) => {
     if (!isDragging) return;
     isDragging = false;
@@ -155,16 +156,17 @@ function handleSwipe(direction) {
     card.style.transition = 'transform 0.4s ease-out';
     card.style.transform = `translate(${endX}px, 0px) rotate(${direction === 'right' ? 30 : -30}deg)`;
     
-    // On cible le choix fait
     const choice = direction === 'right' ? currentCardData.rightChoice : currentCardData.leftChoice;
     
-    // 🚩 On vérifie si ce choix active un Flag (mémoire)
     if (choice.setFlags) {
         choice.setFlags.forEach(flag => {
             gameFlags[flag] = true;
-            console.log("Nouvel événement débloqué : " + flag);
         });
     }
+
+    // ⏳ Le temps passe : on ajoute 1 mois au compteur
+    reignMonths++;
+    monthsDisplay.innerText = reignMonths;
 
     updateStats(choice.impacts);
     
@@ -182,7 +184,7 @@ function updateStats(impacts) {
         
         if (stats[i] <= 0 || stats[i] >= 100) {
             triggerGameOver(i, stats[i]);
-            return; // Stoppe la boucle si on meurt
+            return;
         }
     }
 }
@@ -204,18 +206,27 @@ function hideIndicators() {
 
 function triggerGameOver(statIndex, value) {
     let cause = "";
-    if (statIndex === 0) cause = value >= 100 ? "Le Sénat vous a destituée." : "Le Sénat s'est effondré dans le chaos.";
-    if (statIndex === 1) cause = value >= 100 ? "La Vox Populi a lancé une nouvelle révolution rouge." : "La grève générale a détruit la République.";
-    if (statIndex === 2) cause = value >= 100 ? "La Légion Libre a pris le contrôle par un putsch." : "La République est sans défense, Atalantia a gagné.";
-    if (statIndex === 3) cause = value >= 100 ? "Le Syndicat a racheté la République." : "La famine et la pénurie d'Hélium-3 ont eu raison de vous.";
+    if (statIndex === 0) cause = value >= 100 ? "Le Sénat vous a destituée. L'Oligarchie est de retour." : "Le Sénat s'est effondré. Plus aucune loi ne tient la République.";
+    if (statIndex === 1) cause = value >= 100 ? "La Vox Populi a lancé le Jour des Colombes Rouges." : "La grève générale a mis la République à genoux.";
+    if (statIndex === 2) cause = value >= 100 ? "La Légion Libre a pris le contrôle par un putsch militaire." : "La République est sans défense. Atalantia a gagné.";
+    if (statIndex === 3) cause = value >= 100 ? "Le Syndicat a littéralement racheté la République de l'intérieur." : "La famine et la faillite ont eu raison de votre règne.";
 
-    alert(`FIN DU RÈGNE !\n\n${cause}\n\nUn nouveau dirigeant prend votre place... mais les décisions passées laissent des traces.`);
+    // ⏳ Sauvegarde du meilleur score
+    let recordMessage = "";
+    if (reignMonths > bestScore) {
+        bestScore = reignMonths;
+        localStorage.setItem('redRisingBestScore', bestScore); // Enregistre dans le téléphone
+        recordMessage = `🎉 NOUVEAU RECORD ABSOLU !\n`;
+    }
+
+    alert(`FIN DU RÈGNE !\n\n${cause}\n\n${recordMessage}Vous avez survécu : ${reignMonths} mois.\nMeilleur score : ${bestScore} mois.`);
     
-    // Remise à zéro des stats, MAIS on garde les gameFlags pour la partie suivante !
+    // Remise à zéro pour la nouvelle partie
     stats = [50, 50, 50, 50];
     fills.forEach(fill => fill.style.height = '50%');
+    reignMonths = 1;
+    monthsDisplay.innerText = reignMonths;
     drawNextCard();
 }
 
-// Lancement de la première partie
 drawNextCard();
