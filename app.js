@@ -137,8 +137,18 @@ function drawNextCard() {
         recentCards.shift();
     }
 
-    document.getElementById('card-text').innerText = currentCardData.text;
+        document.getElementById('card-text').innerText = currentCardData.text;
     document.getElementById('character-name').innerText = currentCardData.character;
+    
+    // Charge l'image du personnage, ou met un fond noir par défaut si elle n'existe pas encore
+    const artDiv = document.getElementById('character-art');
+    if (currentCardData.image) {
+        artDiv.style.backgroundImage = `url('${currentCardData.image}')`;
+    } else {
+        // Silhouette par défaut
+        artDiv.style.backgroundImage = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23333"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>')`;
+    }
+
     decisionLeft.innerText = currentCardData.leftChoice.text;
     decisionRight.innerText = currentCardData.rightChoice.text;
     
