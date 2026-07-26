@@ -1,93 +1,82 @@
 // ==========================================
-// 1. LA BASE DE DONNÉES (V4 - Arcs Profonds et Fins Épiques)
+// 1. DESIGN DES PERSONNAGES (Vecteurs Reigns-style)
+// ==========================================
+// Formes géométriques minimalistes intégrées directement en code (SVG)
+
+const characterPortraits = {
+    "Darrow": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231a1515'/><path d='M15,100 L30,65 L70,65 L85,100 Z' fill='%23900C3F'/><circle cx='50' cy='45' r='18' fill='%23f1c27d'/><path d='M32,40 Q50,15 68,40 L65,25 Q50,10 35,25 Z' fill='%23f1c40f'/></svg>",
+    "Sevro": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231e272e'/><path d='M10,100 L30,55 L70,55 L90,100 Z' fill='%23273c2c'/><path d='M20,55 L50,80 L80,55 Z' fill='%237f8ca6'/><circle cx='50' cy='45' r='16' fill='%23d2b48c'/><path d='M36,35 L42,15 L50,25 L58,15 L64,35 Z' fill='%234b2c20'/></svg>",
+    "Sefi": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23dff9fb'/><path d='M10,100 L30,65 L70,65 L90,100 Z' fill='%23bdc3c7'/><circle cx='50' cy='45' r='18' fill='%23f5f6fa'/><path d='M40,40 L60,40 L50,60 Z' fill='%233498db'/><path d='M32,50 Q50,5 68,50 Z' fill='%23ecf0f1'/></svg>",
+    "L'Abomination": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23050505'/><path d='M25,100 L40,75 L60,75 L75,100 Z' fill='%23d4af37'/><circle cx='50' cy='50' r='14' fill='%23f1c27d'/><path d='M38,45 Q50,25 62,45 Z' fill='%23f39c12'/><circle cx='46' cy='48' r='2' fill='%23c0392b'/><circle cx='54' cy='48' r='2' fill='%23c0392b'/></svg>",
+    "Danseur": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%232b1a1a'/><path d='M20,100 L35,70 L65,70 L80,100 Z' fill='%235c5c5c'/><circle cx='50' cy='45' r='16' fill='%23e0ac96'/><path d='M34,35 Q50,15 66,35 Z' fill='%237f8c8d'/></svg>",
+    "Orion": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23112233'/><path d='M15,100 L30,60 L70,60 L85,100 Z' fill='%232980b9'/><circle cx='50' cy='40' r='17' fill='%233e2723'/><path d='M30,25 Q50,0 70,25 Q50,15 30,25 Z' fill='%233498db'/></svg>",
+    // Archétypes génériques si le personnage n'a pas de portrait unique
+    "Or": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231a1a24'/><path d='M20,100 L30,60 L70,60 L80,100 Z' fill='%23d4af37'/><circle cx='50' cy='45' r='16' fill='%23f5d0b5'/><polygon points='40,30 50,15 60,30' fill='%23ffea00'/></svg>",
+    "Cuivre": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%2334495e'/><path d='M25,100 L40,65 L60,65 L75,100 Z' fill='%23d35400'/><circle cx='50' cy='40' r='15' fill='%23e67e22'/><rect x='42' y='35' width='16' height='4' fill='%232c3e50'/></svg>",
+    "Rouge": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23111'/><path d='M25,100 L35,65 L65,65 L75,100 Z' fill='%234a2e2e'/><circle cx='50' cy='40' r='15' fill='%23c89c8a'/><path d='M38,30 Q50,15 62,30 Z' fill='%2370362c'/></svg>",
+    "Gris": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23222'/><path d='M20,100 L30,60 L70,60 L80,100 Z' fill='%23555'/><circle cx='50' cy='40' r='16' fill='%23dcdde1'/><polygon points='35,25 65,25 50,15' fill='%237f8fa6'/></svg>",
+    "Défaut": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%23333'><rect width='100' height='100' fill='%23111'/><path d='M25,100 L40,70 L60,70 L75,100 Z' fill='%23222'/><circle cx='50' cy='45' r='15' fill='%23333'/></svg>"
+};
+
+// ==========================================
+// 2. LA BASE DE DONNÉES (V4 - Arcs Profonds)
 // ==========================================
 
 const gameCards = [
-    // --- CARTES GÉNÉRIQUES (Répétables) ---
     { id: "gen_taxe", character: "Ministre Cuivre", text: "Les marchands Argents se plaignent des taxes portuaires sur Luna. Doit-on les baisser ?", leftChoice: { text: "Maintenir", impacts: [10, 0, 0, 15] }, rightChoice: { text: "Alléger", impacts: [15, 0, 0, -15] } },
     { id: "gen_fete", character: "Sénateur Or", text: "Le peuple est tendu. Organisons-nous des Jeux pour les divertir ?", leftChoice: { text: "Trop cher", impacts: [10, -15, 0, 15] }, rightChoice: { text: "Que la fête commence", impacts: [-10, 20, 0, -20] } },
     { id: "gen_greve", character: "Représentant Rouge", text: "Les dockers demandent une journée de repos en mémoire des martyrs.", leftChoice: { text: "Au travail !", impacts: [10, -15, 0, 15] }, rightChoice: { text: "Accordé", impacts: [-10, 15, 0, -15] } },
-    { id: "gen_sophocles", character: "Kavax au Telemanus", text: "Sophocles a encore volé des jelly beans de contrebande ! Dois-je le réprimander ?", leftChoice: { text: "Laisse le renard", impacts: [0, 10, 0, 0] }, rightChoice: { text: "Discipline", impacts: [10, -5, 0, 0] } },
+    { id: "gen_sophocles", character: "Kavax au Telemanus (Or)", text: "Sophocles a encore volé des jelly beans de contrebande ! Dois-je le réprimander ?", leftChoice: { text: "Laisse le renard", impacts: [0, 10, 0, 0] }, rightChoice: { text: "Discipline", impacts: [10, -5, 0, 0] } },
 
-    // =========================================================
-    // ARC PROFOND 1 : L'ABOMINATION ET LE JOUR DES COLOMBES ROUGES
-    // =========================================================
-    
-    // Étape 1 : L'offre (Départ)
-    { id: "hist_syndicat_offre", isUnique: true, character: "Duc des Mains", text: "Le Syndicat peut sécuriser Luna. La criminalité baissera et vos caisses se rempliront. Laissez-nous faire.", 
+    { id: "hist_syndicat_offre", isUnique: true, character: "Duc des Mains (Gris)", text: "Le Syndicat peut sécuriser Luna. La criminalité baissera et vos caisses se rempliront. Laissez-nous faire.", 
         leftChoice: { text: "Refuser (Guerre des gangs)", impacts: [15, 10, -10, -20], setFlags: ["syndicat_ennemi"] }, 
         rightChoice: { text: "Accepter l'argent", impacts: [-15, -10, 0, 30], setFlags: ["syndicat_infiltre"] } 
     },
-    
-    // Étape 2 : Le Soupçon
-    { id: "cons_syndicat_infiltre", isUnique: true, conditions: ["syndicat_infiltre"], character: "Victra au Julii", text: "Virginia, le Syndicat infiltre le Sénat. Le chef de la Vox, Publius, a été vu avec eux !", 
+    { id: "cons_syndicat_infiltre", isUnique: true, conditions: ["syndicat_infiltre"], character: "Victra au Julii (Or)", text: "Virginia, le Syndicat infiltre le Sénat. Le chef de la Vox, Publius, a été vu avec eux !", 
         leftChoice: { text: "Enquêter via Ephraim", impacts: [0, -15, 15, -10], setFlags: ["enquete_ephraim"] }, 
         rightChoice: { text: "Ignorer Victra", impacts: [0, 10, -10, 15], setFlags: ["piege_abomination"] } 
     },
-
-    // Étape 3a : L'Enquête (Branche A)
-    { id: "cons_enquete_ephraim", isUnique: true, conditions: ["enquete_ephraim"], character: "Ephraim ti Horn", text: "(Top Secret) Souveraine, le chef du Syndicat n'est pas la Reine. C'est un clone enfant de votre frère... Le Chacal !", 
+    { id: "cons_enquete_ephraim", isUnique: true, conditions: ["enquete_ephraim"], character: "Ephraim ti Horn (Gris)", text: "(Top Secret) Souveraine, le chef du Syndicat n'est pas la Reine. C'est un clone enfant de votre frère... Le Chacal !", 
         leftChoice: { text: "Faites-le assassiner", impacts: [0, -10, 0, -25], setFlags: ["clone_mort"] }, 
         rightChoice: { text: "Arrêtez-le légalement", impacts: [20, -20, 0, 0], setFlags: ["proces_clone"] } 
     },
-
-    // Étape 4a : Le Procès qui tourne mal (Fin tragique)
     { id: "cons_proces_clone", isUnique: true, conditions: ["proces_clone"], character: "Juge Cuivre", text: "Le clone a acheté le jury. Il est acquitté. Ses agents de la Main Rouge viennent d'entrer dans le Sénat avec des armes !", 
         leftChoice: { text: "Fuir avec Pax", impacts: [-40, -40, -40, -40], setFlags: ["colombes_rouges"] }, 
         rightChoice: { text: "Combattre", impacts: [-40, -40, -40, -40], setFlags: ["colombes_rouges"] } 
     },
-
-    // Étape 5 : Le Climax (Changement total du monde)
     { id: "climax_colombes_rouges", isUnique: true, conditions: ["colombes_rouges"], character: "L'Abomination", text: "Le Jour des Colombes Rouges... Daxo est mort. Danseur est mort. Le Sénat m'appartient, soeur chérie.", 
-        leftChoice: { text: "Tu vas payer !", impacts: [-100, -100, -100, -100] }, // Provoque un Game Over scénarisé
+        leftChoice: { text: "Tu vas payer !", impacts: [-100, -100, -100, -100] }, 
         rightChoice: { text: "Je me rends...", impacts: [-100, -100, -100, -100] } 
     },
-
-    // Étape 4b : L'assassinat réussi (Fin héroïque mais coûteuse)
-    { id: "cons_clone_mort", isUnique: true, conditions: ["clone_mort"], character: "Ephraim ti Horn", text: "Le clone est mort. Mais ses gardes Obsidiens ont détruit la moitié de la capitale avant de fuir. Luna est en ruine.", 
-        leftChoice: { text: "Reconstruire (Victoire)", impacts: [30, 30, 0, -40] }, // L'arc se termine ici par une grosse victoire politique, mais ruine l'économie
+    { id: "cons_clone_mort", isUnique: true, conditions: ["clone_mort"], character: "Ephraim ti Horn (Gris)", text: "Le clone est mort. Mais ses gardes Obsidiens ont détruit la moitié de la capitale avant de fuir. Luna est en ruine.", 
+        leftChoice: { text: "Reconstruire (Victoire)", impacts: [30, 30, 0, -40] }, 
         rightChoice: { text: "Poursuivre les fuyards", impacts: [10, 10, -30, -10] } 
     },
 
-
-    // =========================================================
-    // ARC PROFOND 2 : LA GUERRE DE MERCURE
-    // =========================================================
-
-    // Étape 1 : La demande
     { id: "hist_mercure", isUnique: true, character: "Darrow", text: "Virginia, je dois lancer une Pluie de Fer sur Mercure avant qu'Atalantia ne consolide ses forces.", 
         leftChoice: { text: "Interdit !", impacts: [15, 0, -25, 10], setFlags: ["darrow_rebelle"] }, 
         rightChoice: { text: "Vas-y", impacts: [-15, -10, 20, -20], setFlags: ["guerre_mercure_on"] } 
     },
-
-    // Étape 2 : L'enlisement
-    { id: "cons_guerre_mercure_on", isUnique: true, conditions: ["guerre_mercure_on"], character: "Général Harnassus", text: "Mercure est un enfer. Darrow déploie les Dieux Tempêtes (Storm Gods) ! Les tsunamis tuent des millions de civils.", 
+    { id: "cons_guerre_mercure_on", isUnique: true, conditions: ["guerre_mercure_on"], character: "Général Harnassus (Or)", text: "Mercure est un enfer. Darrow déploie les Dieux Tempêtes (Storm Gods) ! Les tsunamis tuent des millions de civils.", 
         leftChoice: { text: "Ordonner l'arrêt", impacts: [20, -30, -20, 0], setFlags: ["darrow_isole"] }, 
         rightChoice: { text: "C'est la guerre", impacts: [-25, -40, 25, -10], setFlags: ["troupes_bloquees"] } 
     },
-
-    // Étape 3 : Le Piège d'Atalantia
     { id: "cons_troupes_bloquees", isUnique: true, conditions: ["troupes_bloquees"], character: "Amiral Orion", text: "Atalantia a utilisé une IEM géante. La flotte de Darrow tombe du ciel. Ils sont coincés à Héliopolis !", 
         leftChoice: { text: "Envoyer la flotte de réserve", impacts: [-20, 0, -40, -30], setFlags: ["luna_sans_defense"] }, 
         rightChoice: { text: "Abandonner Darrow", impacts: [10, 20, -50, 10], setFlags: ["darrow_vaincu"] } 
     },
-
-    // Étape 4a : La chute de la République
-    { id: "cons_luna_sans_defense", isUnique: true, conditions: ["luna_sans_defense"], character: "Magnus au Grimmus", text: "Vous avez envoyé tous vos vaisseaux sauver votre mari. Luna n'a plus de bouclier. Regardez le ciel, Virginia. Nous arrivons.", 
+    { id: "cons_luna_sans_defense", isUnique: true, conditions: ["luna_sans_defense"], character: "Magnus au Grimmus (Or)", text: "Vous avez envoyé tous vos vaisseaux sauver votre mari. Luna n'a plus de bouclier. Regardez le ciel, Virginia. Nous arrivons.", 
         leftChoice: { text: "GAME OVER", impacts: [-100, -100, -100, -100] }, 
         rightChoice: { text: "GAME OVER", impacts: [-100, -100, -100, -100] } 
     },
-
-    // Étape 4b : Le deuil
-    { id: "cons_darrow_vaincu", isUnique: true, conditions: ["darrow_vaincu"], character: "Lysander au Lune", text: "(Transmission publique) Le Faucheur de Lykos a été exécuté sur les sables de Mercure. Rendez-vous, Souveraine.", 
-        leftChoice: { text: "Hurler de douleur", impacts: [-50, -50, -50, 0] }, // Un coup critique à toutes les stats, tu devras survivre à ça
+    { id: "cons_darrow_vaincu", isUnique: true, conditions: ["darrow_vaincu"], character: "Lysander au Lune (Or)", text: "(Transmission publique) Le Faucheur a été exécuté sur Mercure. Rendez-vous, Souveraine.", 
+        leftChoice: { text: "Hurler de douleur", impacts: [-50, -50, -50, 0] }, 
         rightChoice: { text: "Préparer la vengeance", impacts: [20, 20, 20, -50] } 
     }
 ];
 
-
 // ==========================================
-// MOTEUR DU JEU
+// 3. LE CERVEAU DU JEU
 // ==========================================
 let stats = [50, 50, 50, 50];
 let gameFlags = {}; 
@@ -137,17 +126,22 @@ function drawNextCard() {
         recentCards.shift();
     }
 
-        document.getElementById('card-text').innerText = currentCardData.text;
+    document.getElementById('card-text').innerText = currentCardData.text;
     document.getElementById('character-name').innerText = currentCardData.character;
     
-    // Charge l'image du personnage, ou met un fond noir par défaut si elle n'existe pas encore
+    // --- NOUVEAU : SYSTÈME D'ATTRIBUTION DES PORTRAITS ---
     const artDiv = document.getElementById('character-art');
-    if (currentCardData.image) {
-        artDiv.style.backgroundImage = `url('${currentCardData.image}')`;
-    } else {
-        // Silhouette par défaut
-        artDiv.style.backgroundImage = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23333"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>')`;
+    let portraitToUse = characterPortraits["Défaut"]; // Portrait par défaut
+    
+    // Cherche le nom du personnage dans notre dictionnaire d'images
+    for (let key in characterPortraits) {
+        if (currentCardData.character.includes(key)) {
+            portraitToUse = characterPortraits[key];
+            break;
+        }
     }
+    artDiv.style.backgroundImage = `url("${portraitToUse}")`;
+    // -----------------------------------------------------
 
     decisionLeft.innerText = currentCardData.leftChoice.text;
     decisionRight.innerText = currentCardData.rightChoice.text;
@@ -266,26 +260,19 @@ function triggerGameOver(statIndex, value) {
     if (reignMonths > bestScore) {
         bestScore = reignMonths;
         localStorage.setItem('redRisingBestScore', bestScore);
-        recordMessage = `🎉 NOUVEAU RECORD ABSOLU !
-`;
+        recordMessage = `🎉 NOUVEAU RECORD ABSOLU !\n`;
     }
 
-    alert(`FIN DU RÈGNE !
-
-${cause}
-
-${recordMessage}Vous avez survécu : ${reignMonths} mois.
-Meilleur score : ${bestScore} mois.`);
+    alert(`FIN DU RÈGNE !\n\n${cause}\n\n${recordMessage}Vous avez survécu : ${reignMonths} mois.\nMeilleur score : ${bestScore} mois.`);
     
     stats = [50, 50, 50, 50];
     fills.forEach(fill => fill.style.height = '50%');
     reignMonths = 1;
     monthsDisplay.innerText = reignMonths;
     playedUniqueCards = []; 
-    gameFlags = {}; // RESET DES CHOIX POUR LA PROCHAINE PARTIE
+    gameFlags = {}; 
     
     drawNextCard();
 }
 
 drawNextCard();
-
