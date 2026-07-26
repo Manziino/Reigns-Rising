@@ -4,45 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Red Rising : Reigns Engine</title>
+    <!-- Polices Red Rising : Cinzel (Ors/Empire) et Lato (Textes lisibles) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="game-ui">
+        
         <header id="stats-container">
+            <!-- 🏛️ SÉNAT -->
             <div class="stat-group" id="stat-0">
                 <div class="indicator"></div>
-                <div class="icon">🏛️</div>
+                <svg class="custom-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M3,21V19H5V8H3V6H21V8H19V19H21V21H3M7,19H9V8H7V19M11,19H13V8H11V19M15,19H17V8H15V19M3,4V2H21V4H3Z"/></svg>
                 <div class="progress-bar"><div class="fill" style="height: 50%;"></div></div>
             </div>
+            
+            <!-- ⭐ VOX POPULI (Étoile du Matin / République) -->
             <div class="stat-group" id="stat-1">
                 <div class="indicator"></div>
-                <div class="icon">✊</div>
+                <svg class="custom-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12,2L14.5,8.5L21,11L14.5,13.5L12,20L9.5,13.5L3,11L9.5,8.5L12,2Z"/></svg>
                 <div class="progress-bar"><div class="fill" style="height: 50%;"></div></div>
             </div>
+            
+            <!-- 🪝 ARMÉE (SlingBlade) -->
             <div class="stat-group" id="stat-2">
                 <div class="indicator"></div>
-                <div class="icon">⚔️</div>
+                <svg class="custom-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M11.5,22C11.5,22 13,19 13,15C13,9.5 9.5,5 2,2C8.5,2.5 15,6 18,12C20.5,17 19,22 19,22L17,21C17,21 17.5,18 15.5,14C13.5,18 13.5,21.5 13.5,21.5L11.5,22Z"/></svg>
                 <div class="progress-bar"><div class="fill" style="height: 50%;"></div></div>
             </div>
+            
+            <!-- ⚛️ RESSOURCES (Hélium-3) -->
             <div class="stat-group" id="stat-3">
                 <div class="indicator"></div>
-                <div class="icon">💎</div>
+                <svg class="custom-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12,15A3,3 0 1,0 9,12A3,3 0 0,0 12,15M12,2C6.5,2 2,6.5 2,12C2,17.5 6.5,22 12,22C17.5,22 22,17.5 22,12C22,6.5 17.5,2 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20Z"/></svg>
                 <div class="progress-bar"><div class="fill" style="height: 50%;"></div></div>
             </div>
         </header>
 
-        <!-- NOUVEAU : Affichage du temps de règne -->
-        <div id="time-counter">Mois de règne : <span id="months-count">1</span></div>
+        <div id="time-counter">Années de règne : <span id="months-count">1</span></div>
 
         <main id="board">
-            <h2 id="character-name">Chargement...</h2>
+            <h2 id="character-name">Souveraine</h2>
             
             <div id="card-stack">
                 <div id="current-card" class="card">
                     <div class="decision-overlay left-decision" id="decision-left">Non</div>
                     <div class="decision-overlay right-decision" id="decision-right">Oui</div>
+                    
+                    <!-- NOUVEAU : Emplacement pour le Portrait du personnage -->
+                    <div id="character-art" class="character-art"></div>
+                    
                     <div class="card-content">
-                        <p id="card-text">Initialisation du système...</p>
+                        <p id="card-text">Chargement de l'Holonet...</p>
                     </div>
                 </div>
             </div>
