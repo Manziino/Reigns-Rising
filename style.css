@@ -1,148 +1,131 @@
 :root {
-    --bg-color: #111;
-    --card-bg: #2a2a35;
+    --bg-dark: #0a0a0c;
+    --mars-glow: #3a1111;
     --gold-accent: #d4af37;
+    --gold-dim: #8b7322;
     --red-accent: #c0392b;
+    --card-bg: #151515;
+    --text-main: #f0f0f0;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Helvetica Neue', Arial, sans-serif; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    background-color: var(--bg-color);
-    color: white;
+    background: radial-gradient(circle at bottom, var(--mars-glow), var(--bg-dark));
+    color: var(--text-main);
+    font-family: 'Lato', sans-serif;
     height: 100vh;
     overflow: hidden;
-    touch-action: none; /* Crucial : Empêche le navigateur mobile de scroller */
+    touch-action: none;
     display: flex;
     justify-content: center;
 }
 
 #game-ui {
     width: 100%;
-    max-width: 450px; /* Format smartphone */
+    max-width: 450px;
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding: 20px 15px;
 }
 
 #stats-container {
     display: flex;
     justify-content: space-around;
     height: 80px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
-.stat-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-}
+.stat-group { display: flex; flex-direction: column; align-items: center; position: relative; }
 
 .indicator {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: white;
-    opacity: 0; /* Caché par défaut */
-    margin-bottom: 5px;
-    transition: opacity 0.2s;
+    width: 8px; height: 8px; border-radius: 50%;
+    background-color: var(--gold-accent);
+    opacity: 0; margin-bottom: 5px; transition: opacity 0.2s;
+    box-shadow: 0 0 8px var(--gold-accent);
 }
 
-.icon { font-size: 24px; margin-bottom: 5px; }
+/* Nouvelles Icônes SVG */
+.custom-icon {
+    width: 28px; height: 28px;
+    color: var(--gold-dim);
+    margin-bottom: 8px;
+    filter: drop-shadow(0px 2px 2px rgba(0,0,0,0.8));
+}
 
 .progress-bar {
-    width: 12px;
-    height: 40px;
-    background-color: #333;
-    border-radius: 6px;
-    position: relative;
-    overflow: hidden;
+    width: 12px; height: 35px;
+    background-color: #222;
+    border: 1px solid #444;
+    border-radius: 4px;
+    position: relative; overflow: hidden;
 }
 
 .progress-bar .fill {
-    width: 100%;
-    background-color: var(--gold-accent);
-    position: absolute;
-    bottom: 0;
-    transition: height 0.4s ease-out;
+    width: 100%; background-color: var(--gold-accent);
+    position: absolute; bottom: 0; transition: height 0.4s ease-out;
 }
 
-#board {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-}
-
-#character-name {
-    margin-bottom: 30px;
-    font-size: 1.2rem;
-    color: var(--gold-accent);
-    text-align: center;
-}
-
-#card-stack {
-    position: relative;
-    width: 300px;
-    height: 400px;
-}
-
-.card {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: var(--card-bg);
-    border: 2px solid #444;
-    border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 20px;
-    text-align: center;
-    will-change: transform; /* Optimisation mobile */
-    cursor: grab;
-}
-
-.card:active { cursor: grabbing; }
-
-.decision-overlay {
-    position: absolute;
-    top: 20px;
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    padding: 10px;
-    border-radius: 8px;
-    opacity: 0; /* Géré par le JS */
-    pointer-events: none;
-}
-
-.left-decision {
-    right: 20px;
-    color: var(--red-accent);
-    border: 2px solid var(--red-accent);
-    transform: rotate(15deg);
-}
-
-.right-decision {
-    left: 20px;
-    color: #2ecc71;
-    border: 2px solid #2ecc71;
-    transform: rotate(-15deg);
-}
-
-/* --- NOUVEAU : Style du compteur de temps --- */
 #time-counter {
     text-align: center;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: var(--gold-accent);
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    color: var(--gold-dim);
     margin-bottom: 20px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    letter-spacing: 2px;
 }
 
+#board { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+
+#character-name {
+    margin-bottom: 20px;
+    font-family: 'Cinzel', serif;
+    font-size: 1.4rem;
+    color: var(--gold-accent);
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+}
+
+#card-stack { position: relative; width: 310px; height: 420px; }
+
+.card {
+    position: absolute; width: 100%; height: 100%;
+    background-color: var(--card-bg);
+    border: 2px solid var(--gold-dim);
+    border-radius: 12px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,0,0,0.5);
+    display: flex; flex-direction: column;
+    overflow: hidden; /* Coupe l'image si elle dépasse */
+    will-change: transform; cursor: grab;
+}
+.card:active { cursor: grabbing; }
+
+/* Emplacement du Portrait */
+.character-art {
+    width: 100%;
+    height: 55%; /* Prend la moitié haute de la carte */
+    background-color: #222;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="%23333"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-bottom: 2px solid var(--gold-dim);
+}
+
+.card-content {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 15px 20px; text-align: center;
+    font-size: 1.05rem; line-height: 1.4;
+}
+
+.decision-overlay {
+    position: absolute; top: 20px; z-index: 10;
+    font-family: 'Cinzel', serif; font-size: 1.8rem; font-weight: 800;
+    text-transform: uppercase; padding: 5px 15px; border-radius: 4px;
+    opacity: 0; pointer-events: none;
+    background-color: rgba(0,0,0,0.7);
+}
+
+.left-decision { right: 15px; color: var(--red-accent); border: 2px solid var(--red-accent); transform: rotate(10deg); }
+.right-decision { left: 15px; color: #2ecc71; border: 2px solid #2ecc71; transform: rotate(-10deg); }
